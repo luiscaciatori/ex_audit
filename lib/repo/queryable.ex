@@ -157,7 +157,7 @@ defmodule ExAudit.Queryable do
         _ -> res
       end
     else
-      Logger.warn([
+      Logger.warning([
         "Can't revert ",
         inspect(version),
         " because the entity would still be deleted"
