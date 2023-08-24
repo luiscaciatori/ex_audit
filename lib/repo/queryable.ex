@@ -38,6 +38,15 @@ defmodule ExAudit.Queryable do
             where: v.entity_id == ^id,
             where: v.entity_schema == ^struct
           )
+
+         _ ->
+          entity_id = get_entity_id(struct)
+
+          from(
+            v in query,
+            where: v.entity_id == ^entity_id,
+            where: v.entity_schema == ^struct.__struct__
+          )
       end
 
     versions = Ecto.Repo.Queryable.all(module, query, Ecto.Repo.Supervisor.tuplet(module, opts))
@@ -185,4 +194,10 @@ defmodule ExAudit.Queryable do
   defp reverse_action(:updated), do: :updated
   defp reverse_action(:created), do: :deleted
   defp reverse_action(:deleted), do: :created
+
+  defp get_entity_id(%{__struct__: struct} = entity) do
+    [primary_key | _] = struct.__schema__(:primary_key)
+
+    Map.get(entity, primary_key)
+  end
 end

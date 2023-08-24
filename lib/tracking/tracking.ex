@@ -23,6 +23,10 @@ defmodule ExAudit.Tracking do
   def compare_versions(action, old, new) do
     schema = Map.get(old, :__struct__, Map.get(new, :__struct__))
 
+    [primary_key | _] = schema.__schema__(:primary_key)
+
+    entity_id = get_entity_id(old, primary_key) || get_entity_id(new, primary_key)
+
     if schema in tracked_schemas() do
       assocs = schema.__schema__(:associations)
 
@@ -38,7 +42,7 @@ defmodule ExAudit.Tracking do
 
         patch ->
           params = %{
-            entity_id: Map.get(old, :id) || Map.get(new, :id),
+            entity_id: entity_id,
             entity_schema: schema,
             patch: patch,
             action: action
@@ -124,5 +128,9 @@ defmodule ExAudit.Tracking do
 
   defp version_schema do
     Application.get_env(:ex_audit, :version_schema)
+  end
+
+  defp get_entity_id(entity, pkey) do
+    Map.get(entity, pkey)
   end
 end
