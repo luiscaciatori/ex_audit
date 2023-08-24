@@ -55,7 +55,7 @@ defmodule ExAudit.Mixfile do
       {:excoveralls, "~> 0.7", only: :test},
       {:ex_doc, ">= 0.0.0", runtime: false, only: :dev},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
-      {:ssl_verify_fun, "~> 1.1.7", manager: :rebar3, override: true}
+      {:ssl_verify_fun, "~> 1.1.0", manager: :rebar3, override: true}
     ]
   end
 end
